@@ -1,0 +1,11 @@
+.item-card {
+  border-style: solid;
+  border-radius: 5px;
+  margin: 30px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+button {
+  margin: 15px;
+}

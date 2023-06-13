@@ -1,12 +1,18 @@
 import './App.css';
+import { Routes, Route } from 'react-router-dom';
+import Search from './pages/Search/Search';
+import Wishlist from './pages/Wishlist/Wishlist';
+import Layout from './components/Layout/Layout';
 
 function App() {
   return (
     <div>
-      <div className="navbar">
-        <h3>Search</h3>
-        <h3>Wishlist</h3>
-      </div>
+      <Layout />
+      <Routes>
+        <Route path="/" element={<Search />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+      </Routes>
     </div>
   );
 }
