@@ -1,11 +1,16 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import './Wishlist.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import WishlistItem from '../../components/WishlistItem/WishlistItem';
+import { initWishlist } from '../../redux/searchSlice';
 
 const Wishlist: FC = () => {
   const wishlist = useSelector((state: RootState) => state.search.wishlist);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(initWishlist());
+  }, []);
 
   return (
     <div className="wishlist-page">

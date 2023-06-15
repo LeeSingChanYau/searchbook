@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Book } from '../../types/types';
 import './BookItem.css';
-import { addToWishlist } from '../../redux/searchSlice';
+import { saveWishlistToLocalStorage } from '../../redux/searchSlice';
 import { useDispatch } from 'react-redux';
 
 interface BookItemProps {
@@ -18,12 +18,12 @@ const BookItem: FC<BookItemProps> = ({ book }) => {
       <h3>{book.title}</h3>
       {showOptions && (
         <>
-          <h3>{book.authors.join(', ')}</h3>
+          {book.authors && <h3>{book.authors.join(', ')}</h3>}
           <p>{book.description}</p>
           <button
             onClick={() => {
               console.log('Clicked!');
-              dispatch(addToWishlist(book));
+              dispatch(saveWishlistToLocalStorage(book));
             }}
           >
             Add to Wishlist

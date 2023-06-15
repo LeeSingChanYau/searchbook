@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Search from './pages/Search/Search';
 import Wishlist from './pages/Wishlist/Wishlist';
 import Layout from './components/Layout/Layout';
+import React from 'react';
 
 function App() {
   return (
