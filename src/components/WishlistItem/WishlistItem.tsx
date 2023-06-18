@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Book } from '../../types/types';
 import './WishlistItem.css';
-import { saveWishlistToLocalStorage } from '../../redux/searchSlice';
+import { saveWishlistToLS } from '../../redux/wishlistSlice';
 import { useDispatch } from 'react-redux';
 
 interface WishlistItemProps {
@@ -23,7 +23,7 @@ const WishlistItem: FC<WishlistItemProps> = ({ book }) => {
           <button
             onClick={() => {
               console.log('Clicked!');
-              dispatch(saveWishlistToLocalStorage(book));
+              dispatch(saveWishlistToLS(book));
             }}
           >
             Remove From Wishlist

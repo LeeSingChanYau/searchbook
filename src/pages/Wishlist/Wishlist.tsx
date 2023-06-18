@@ -3,14 +3,14 @@ import './Wishlist.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import WishlistItem from '../../components/WishlistItem/WishlistItem';
-import { initWishlist } from '../../redux/searchSlice';
+import { initWishlist } from '../../redux/wishlistSlice';
 
 const Wishlist: FC = () => {
-  const wishlist = useSelector((state: RootState) => state.search.wishlist);
+  const wishlist = useSelector((state: RootState) => state.wishlist.books);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(initWishlist());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="wishlist-page">

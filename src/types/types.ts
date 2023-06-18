@@ -5,5 +5,11 @@ export interface Book {
   authors: string[];
   publishedDate: string;
   description: string;
-  thumbnail: string;
+  thumbnail?: string;
+}
+
+export interface Result {
+  items: Book[];
+  kind: string;
+  totalItems: number;
 }

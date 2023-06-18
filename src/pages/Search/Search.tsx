@@ -1,58 +1,102 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import './Search.css';
-import { fetchBookByName } from '../../API/API';
-import type { RootState } from '../../redux/store';
+import type { AppDispatch, RootState } from '../../redux/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { setValue, setBooks } from '../../redux/searchSlice';
+import { setValue, search } from '../../redux/searchSlice';
 import BookItem from '../../components/BookItem/BookItem';
 import { ReactComponent as Spinner } from './Spinner.svg';
+import Pagination from '../../components/Pagination/Pagination';
+import {
+  searchSuggestions,
+  updateShowSuggestion,
+} from '../../redux/suggestionSlice';
 
 const Search: FC = () => {
   const inputValue = useSelector((state: RootState) => state.search.value);
   const books = useSelector((state: RootState) => state.search.books);
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const [showError, setShowError] = useState(false);
-  const [errorMessage, setShowErrorMessage] = useState('');
+  const isLoading = useSelector((state: RootState) => state.search.isLoading);
+  const suggestions = useSelector(
+    (state: RootState) => state.suggestion.suggestions
+  );
+  const showSuggestions = useSelector(
+    (state: RootState) => state.suggestion.showSuggestion
+  );
+
+  const dispatch = useDispatch<AppDispatch>();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = () => {
-    setLoading(true);
-    setShowError(false);
-    setShowErrorMessage('');
-
-    fetchBookByName(inputValue)
-      .then((res) => {
-        dispatch(setBooks(res));
-      })
-      .catch((err) => {
-        setShowErrorMessage(err);
-        setShowError(true);
-      })
-      .finally(() => {
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-      });
+    dispatch(updateShowSuggestion(false));
+    dispatch(search());
   };
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setValue(e.target.value));
+    dispatch(searchSuggestions());
+    dispatch(updateShowSuggestion(true));
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+      dispatch(updateShowSuggestion(false));
+    }
+  };
+
+  const handleInputClick = () => {
+    dispatch(updateShowSuggestion(true));
+  };
+
+  const handleSuggestionClick = (item: string) => {
+    dispatch(setValue(item));
+    dispatch(updateShowSuggestion(false));
+    dispatch(search());
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="search-page">
       <h1>Search Page</h1>
-      <div>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => dispatch(setValue(e.target.value))}
-        />
-        <button onClick={handleSearch}>Search</button>
+      <div className="input-container">
+        <div className="input-text-suggestions" ref={inputRef}>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => handleOnChange(e)}
+            onClick={handleInputClick}
+          />
+          {showSuggestions && suggestions && suggestions.length > 0 && (
+            <ul className="suggestions-container">
+              {suggestions.map((item, index) => (
+                <li
+                  className="suggestion-element"
+                  key={index}
+                  onClick={() => handleSuggestionClick(item)}
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <button className="search-button" onClick={handleSearch}>
+          Search
+        </button>
       </div>
-      {loading && <Spinner />}
-      {showError && <h2>{errorMessage}</h2>}
+
+      {isLoading && <Spinner />}
       <ul>
-        {books.length > 0 &&
-          !loading &&
+        {books &&
+          books.length > 0 &&
+          !isLoading &&
           books.map((book) => <BookItem key={book.id} book={book} />)}
       </ul>
+      <Pagination />
     </div>
   );
 };

@@ -1,0 +1,22 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.page-list {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.page-number {
+  border-style: solid;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+}

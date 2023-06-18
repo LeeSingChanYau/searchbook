@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Book } from '../../types/types';
 import './BookItem.css';
-import { saveWishlistToLocalStorage } from '../../redux/searchSlice';
+import { saveWishlistToLS } from '../../redux/wishlistSlice';
 import { useDispatch } from 'react-redux';
 
 interface BookItemProps {
@@ -14,7 +14,12 @@ const BookItem: FC<BookItemProps> = ({ book }) => {
 
   return (
     <li key={book.id} className="item-card">
-      <img src={book.thumbnail} alt={book.title} />
+      {book.thumbnail ? (
+        <img src={book.thumbnail} alt={book.title} />
+      ) : (
+        <h3>N/A</h3>
+      )}
+
       <h3>{book.title}</h3>
       {showOptions && (
         <>
@@ -23,7 +28,7 @@ const BookItem: FC<BookItemProps> = ({ book }) => {
           <button
             onClick={() => {
               console.log('Clicked!');
-              dispatch(saveWishlistToLocalStorage(book));
+              dispatch(saveWishlistToLS(book));
             }}
           >
             Add to Wishlist

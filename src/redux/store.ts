@@ -1,9 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import searchReducer from './searchSlice';
+import searchSlice from './searchSlice';
+import wishlistSlice from './wishlistSlice';
+import suggestionSlice from './suggestionSlice';
 
 export const store = configureStore({
   reducer: {
-    search: searchReducer,
+    search: searchSlice,
+    wishlist: wishlistSlice,
+    suggestion: suggestionSlice,
   },
 });
 
