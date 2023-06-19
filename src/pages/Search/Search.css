@@ -30,11 +30,13 @@ ul {
 }
 
 .suggestions-container {
+  position: absolute;
   border-style: solid;
   border-radius: 5px;
   border-width: 1px;
   border-color: #808080;
-  margin: 0;
+  background-color: white;
+  margin: 20px;
   padding: 0;
   width: 300px;
 }

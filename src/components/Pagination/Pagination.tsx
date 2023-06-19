@@ -51,7 +51,11 @@ const Pagination = () => {
       <ul className="page-list">
         {totalPages <= 6 &&
           firstNItems.map((index) => (
-            <li key={index} onClick={() => handleUpdatePage(index)}>
+            <li
+              className="page-number"
+              key={index}
+              onClick={() => handleUpdatePage(index)}
+            >
               {index}
             </li>
           ))}

@@ -24,6 +24,7 @@ const Search: FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const inputRef = useRef<HTMLInputElement>(null);
+  const inputTextRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = () => {
     dispatch(updateShowSuggestion(false));
@@ -52,10 +53,23 @@ const Search: FC = () => {
     dispatch(search());
   };
 
+  const handleEnter = (event: KeyboardEvent) => {
+    if (
+      inputTextRef.current &&
+      inputTextRef.current.contains(event.target as Node) &&
+      event.key === 'Enter'
+    ) {
+      dispatch(updateShowSuggestion(false));
+      dispatch(search());
+    }
+  };
+
   useEffect(() => {
     document.addEventListener('click', handleClickOutside);
+    document.addEventListener('keydown', handleEnter);
     return () => {
       document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('keydown', handleEnter);
     };
   }, []);
 
@@ -69,6 +83,7 @@ const Search: FC = () => {
             value={inputValue}
             onChange={(e) => handleOnChange(e)}
             onClick={handleInputClick}
+            ref={inputTextRef}
           />
           {showSuggestions && suggestions && suggestions.length > 0 && (
             <ul className="suggestions-container">
