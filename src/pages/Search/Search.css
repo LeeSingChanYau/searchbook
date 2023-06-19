@@ -21,6 +21,10 @@ ul {
   align-items: center;
 }
 
+.input-text-suggestions input {
+  width: 300px;
+}
+
 .search-button {
   margin-top: 0px;
 }
@@ -32,6 +36,7 @@ ul {
   border-color: #808080;
   margin: 0;
   padding: 0;
+  width: 300px;
 }
 
 .suggestion-element {

@@ -14,6 +14,7 @@ const Pagination = () => {
   const [firstNItems, setFirstNItems] = useState<number[]>([]);
   //const lastFiveItems = [totalPages - 2, totalPages - 1, totalPages];
   const pagesBetweenCurrent = [currentPage - 1, currentPage, currentPage + 1];
+  const books = useSelector((state: RootState) => state.search.books);
 
   const handlePrev = () => {
     dispatch(updatePage(currentPage - 1));
@@ -45,7 +46,7 @@ const Pagination = () => {
   }, [totalPages]);
 
   return (
-    <div className="pagination">
+    <div className={books.length > 0 ? 'pagination' : 'pagination-bottom'}>
       <button onClick={handlePrev}>prev</button>
       <ul className="page-list">
         {totalPages <= 6 &&
