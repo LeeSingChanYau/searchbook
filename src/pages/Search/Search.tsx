@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useEffect, useRef, useCallback } from 'react';
 import './Search.css';
 import type { AppDispatch, RootState } from '../../redux/store';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,6 +10,7 @@ import {
   searchSuggestions,
   updateShowSuggestion,
 } from '../../redux/suggestionSlice';
+import _ from 'lodash';
 
 const Search: FC = () => {
   const inputValue = useSelector((state: RootState) => state.search.value);
@@ -26,16 +27,58 @@ const Search: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputTextRef = useRef<HTMLInputElement>(null);
 
+  const myDebounce = (cb: (...args: any) => any, waitTime: number) => {
+    let timer: NodeJS.Timeout;
+
+    return (...args: any[]) => {
+      const self = this;
+
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        cb.apply(self, args);
+      }, waitTime);
+    };
+  };
+
+  const myThrottle = (cb: (...args: any) => any, waitTime: number) => {
+    let lastArgs: any[] = [];
+    let isThrottled = false;
+
+    const throttledFunction = (...args: any[]) => {
+      if (isThrottled) {
+        lastArgs = args;
+        return;
+      }
+
+      cb.apply(this, args);
+      isThrottled = true;
+
+      setTimeout(() => {
+        isThrottled = false;
+
+        if (lastArgs.length > 0) {
+          throttledFunction.apply(this, lastArgs);
+          lastArgs = [];
+        }
+      }, waitTime);
+    };
+
+    return throttledFunction;
+  };
+
   const handleSearch = () => {
     dispatch(updateShowSuggestion(false));
     dispatch(search());
   };
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setValue(e.target.value));
-    dispatch(searchSuggestions());
-    dispatch(updateShowSuggestion(true));
-  };
+  const handleOnChange = useCallback(
+    myThrottle((value: string) => {
+      dispatch(setValue(value));
+      dispatch(searchSuggestions());
+      dispatch(updateShowSuggestion(true));
+    }, 3000),
+    []
+  );
 
   const handleClickOutside = (event: MouseEvent) => {
     if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
@@ -81,7 +124,7 @@ const Search: FC = () => {
           <input
             type="text"
             value={inputValue}
-            onChange={(e) => handleOnChange(e)}
+            onChange={(e) => handleOnChange(e.target.value)}
             onClick={handleInputClick}
             ref={inputTextRef}
           />
