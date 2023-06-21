@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, RootState } from './store';
-import axios from 'axios';
 
 export interface SearchState {
   suggestions: string[];
@@ -24,10 +23,14 @@ export const searchSuggestions = createAsyncThunk<
   }
 >('searchbook/searchSuggestion', async (args, thunkAPI) => {
   const { value } = thunkAPI.getState().search;
-  const res = await axios.get(
+  const res = await fetch(
     `https://www.googleapis.com/books/v1/volumes?q=${value}&startIndex=0&maxResults=10`
   );
-  const suggestions: string[] = res.data.items.map((item: any) => {
+  if (!res.ok) {
+    throw new Error('Request failed');
+  }
+  const data = await res.json();
+  const suggestions: string[] = data.items.map((item: any) => {
     const volumeInfo = item.volumeInfo;
     const book: string = volumeInfo.title;
     return book;

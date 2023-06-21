@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { Book, Result } from '../types/types';
 import { AppDispatch, RootState } from './store';
-import axios from 'axios';
 
 export interface SearchState {
   value: string;
@@ -38,11 +37,15 @@ export const search = createAsyncThunk<
   const { value, currentPage, itemsPerPage } = thunkAPI.getState().search;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const maxResults = itemsPerPage;
-  const res = await axios.get(
+  const response = await fetch(
     `https://www.googleapis.com/books/v1/volumes?q=${value}&startIndex=${startIndex}&maxResults=${maxResults}`
   );
+  if (!response.ok) {
+    throw new Error('Request failed');
+  }
+  const data = await response.json();
   const books: Result = {
-    items: res.data.items.map((item: any) => {
+    items: data.items.map((item: any) => {
       const volumeInfo = item.volumeInfo;
       const book: Book = {
         id: item.id,
@@ -57,8 +60,8 @@ export const search = createAsyncThunk<
       };
       return book;
     }),
-    kind: res.data.kind,
-    totalItems: res.data.totalItems,
+    kind: data.kind,
+    totalItems: data.totalItems,
   };
   console.log(books);
   return books;

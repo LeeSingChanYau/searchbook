@@ -18,7 +18,7 @@ const Wishlist: FC = () => {
       <ul>
         {wishlist.length > 0 ? (
           wishlist.map((book) => {
-            return <WishlistItem book={book} />;
+            return <WishlistItem book={book} key={book.id} />;
           })
         ) : (
           <li>No Items in wishlist. Add Items to wishlist</li>
