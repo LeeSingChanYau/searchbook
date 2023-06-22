@@ -14,7 +14,7 @@ const Wishlist: FC = () => {
 
   return (
     <div className="wishlist-page">
-      <h1>Wishlist</h1>
+      <h1>Wishlist Page</h1>
       <ul>
         {wishlist.length > 0 ? (
           wishlist.map((book) => {

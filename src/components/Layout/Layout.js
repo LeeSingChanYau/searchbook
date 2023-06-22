@@ -5,10 +5,18 @@ const Layout = () => {
   return (
     <>
       <div className="navbar">
-        <Link to="/search" style={{ textDecoration: 'none' }}>
+        <Link
+          data-testid="search-link"
+          to="/search"
+          style={{ textDecoration: 'none' }}
+        >
           <h3>Search</h3>
         </Link>
-        <Link to="/wishlist" style={{ textDecoration: 'none' }}>
+        <Link
+          data-testid="wishlist-link"
+          to="/wishlist"
+          style={{ textDecoration: 'none' }}
+        >
           <h3>Wishlist</h3>
         </Link>
       </div>

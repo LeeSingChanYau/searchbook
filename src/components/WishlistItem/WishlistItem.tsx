@@ -13,7 +13,7 @@ const WishlistItem: FC<WishlistItemProps> = ({ book }) => {
   const dispatch = useDispatch();
 
   return (
-    <li key={book.id} className="item-card">
+    <li key={book.id} className="item-card" data-testid={book.id}>
       <img src={book.thumbnail} alt={book.title} />
       <h3>{book.title}</h3>
       {showOptions && (
@@ -21,6 +21,7 @@ const WishlistItem: FC<WishlistItemProps> = ({ book }) => {
           <h3>{book.authors.join(', ')}</h3>
           <p>{book.description}</p>
           <button
+            data-testid={`Remove-${book.id}`}
             onClick={() => {
               console.log('Clicked!');
               dispatch(saveWishlistToLS(book));
@@ -32,13 +33,19 @@ const WishlistItem: FC<WishlistItemProps> = ({ book }) => {
       )}
       {showOptions ? (
         <div>
-          <button onClick={() => setShowOptions(!showOptions)}>
+          <button
+            data-testid={`ShowLess-${book.id}`}
+            onClick={() => setShowOptions(!showOptions)}
+          >
             Show less
           </button>
         </div>
       ) : (
         <div>
-          <button onClick={() => setShowOptions(!showOptions)}>
+          <button
+            data-testid={`ShowMore-${book.id}`}
+            onClick={() => setShowOptions(!showOptions)}
+          >
             Show more
           </button>
         </div>
