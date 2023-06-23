@@ -27,7 +27,6 @@ const BookItem: FC<BookItemProps> = ({ book }) => {
           <p>{book.description}</p>
           <button
             onClick={() => {
-              console.log('Clicked!');
               dispatch(saveWishlistToLS(book));
             }}
           >
